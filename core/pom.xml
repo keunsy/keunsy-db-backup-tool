@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>keunsy-db-backup-tool</artifactId>
+        <groupId>com.keunsy.dbbackuptool</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>keunsy-db-backup-tool-core</artifactId>
+
+    <!-- jar包依赖 -->
+    <dependencies>
+        <dependency>
+            <groupId>org.dbunit</groupId>
+            <artifactId>dbunit</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <!-- <finalName>${project.artifactId}</finalName> -->
+        <!-- 配置资源位置，可任意定义 -->
+        <!-- <resources> <resource> <directory>src/main/resources</directory> <includes>
+            <include>**/*.*</include> </includes> <filtering>true</filtering> </resource>
+            </resources> -->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+            </plugin>
+
+            <!--assembly 打包插件 命令： mvn assembly：assembly -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+
+            <!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-clean-plugin</artifactId>
+                <version>2.4</version> 指定删除的文件位置 <configuration> <filesets> <directoty></directoty>
+                </filesets> </configuration> </plugin> -->
+        </plugins>
+
+    </build>
+
+
+
+
+    <!-- 多环境配置 例：调用生成环境时 使用命令 mvn clean package -P production -->
+    <profiles>
+        <profile>
+            <!-- 开发环境 -->
+            <id>development</id>
+            <!-- 默认使用 -->
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <!-- 数据源配置 -->
+                <db.name>remote_bak_server</db.name>
+                <connection.driver_class>com.mysql.jdbc.Driver</connection.driver_class>
+                <connection.url>
+                    <![CDATA[jdbc:mysql://localhost:3306/${db.name}?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8]]>
+                </connection.url>
+                <connection.username>root</connection.username>
+                <connection.password>root</connection.password>
+                <!-- 日志配置 -->
+                <log.dir>D:/logs/${project.artifactId}</log.dir>
+            </properties>
+        </profile>
+
+        <profile>
+            <!-- 测试环境 -->
+            <id>test</id>
+            <properties>
+                <db.name>remote_bak_server</db.name>
+                <connection.driver_class>com.mysql.jdbc.Driver</connection.driver_class>
+                <connection.url> <![CDATA[jdbc:mysql://localhost:3306/${db.name}?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8]]>
+                </connection.url>
+                <connection.username>root</connection.username>
+                <connection.password/>
+                <log.dir>/keunsy/logs/${project.artifactId}</log.dir>
+            </properties>
+        </profile>
+        <profile>
+            <!-- 正式环境 -->
+            <id>production</id>
+            <properties>
+                <db.name>remote_bak_server</db.name>
+                <connection.driver_class>com.mysql.jdbc.Driver</connection.driver_class>
+                <connection.url> <![CDATA[jdbc:mysql://localhost:3306/${db.name}?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8]]>
+                </connection.url>
+                <connection.username>root</connection.username>
+                <connection.password/>
+                <log.dir>/keunsy/logs/${project.artifactId}</log.dir>
+            </properties>
+        </profile>
+    </profiles>
+
+</project>

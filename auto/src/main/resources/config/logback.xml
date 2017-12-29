@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<configuration debug="false" scan="true"  scanPeriod="30 seconds">
+
+	<!-- <property name="LOG_PATH" value="D:/logs/DbBackupTool"/> -->
+	<property name="LOG_PATH" value="/keunsy/logs/DbBackupTool"/><!-- linux -->
+	<property name="LOG_PARTTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n"/>
+	<property name="MAX_HISTORY" value="60"/>
+
+    <!-- 控制台 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PARTTERN}</pattern>
+        </encoder>
+    </appender>
+    
+    <!-- 出错日志 appender  -->
+    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 按天回滚 daily -->
+            <!-- log.dir 在maven profile里配置 -->
+            <fileNamePattern>${LOG_PATH}/error-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 日志最大的历史 60天 -->
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PARTTERN}</pattern>
+        </encoder>
+    </appender>
+    
+    <!-- 邮件appender  -->
+    <appender name="MAIL" class="ch.qos.logback.classic.net.SMTPAppender">
+    	<smtpHost>mail.hongshutech.com</smtpHost>
+    	<from>pg@hongshutech.com</from>
+    	<to>chenrong@baiwutong.com</to>
+    	<username>pg@hongshutech.com</username>
+    	<password>hongshu.123</password>
+    	<subject>备份工具错误邮件 </subject>
+    	<layout class="ch.qos.logback.classic.html.HTMLLayout">
+    		<pattern>%date %level %thread% logger{0} %line %message</pattern>
+    	</layout>
+    	<filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+    		<evaluator class="ch.qos.logback.classic.boolex.JaninoEventEvaluator">
+    			<expression>
+    				if(level > WARN &amp;&amp; null != throwalbe){
+    					return true;
+    				}
+    				return false;
+    			</expression>
+    		</evaluator>
+    		<onMatch>ACCEPT</onMatch>
+    		<onMismatch>DENY</onMismatch>
+    	</filter>
+    </appender>
+    
+    <!-- 主要日志 appender  -->
+    <appender name="MAIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 按天回滚 daily -->
+            <fileNamePattern>${LOG_PATH}/main-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 日志最大的历史 60天 -->
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PARTTERN}</pattern>
+        </encoder>
+    </appender>
+    
+    
+    <!-- jdbc日志 appender  -->
+    <appender name="JDBC" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 按天回滚 daily -->
+            <fileNamePattern>${LOG_PATH}/jdbc-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 日志最大的历史 60天 -->
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PARTTERN}</pattern>
+        </encoder>
+    </appender>
+    
+    <!-- 监控日志 appender  -->
+    <appender name="MONITOR"  class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 按天回滚 daily -->
+            <fileNamePattern>${LOG_PATH}/monitor-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 日志最大的历史 60天 -->
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PARTTERN}</pattern>
+        </encoder>
+    </appender>
+    
+    <!-- 导出日志 appender  -->
+    <appender name="EXPORT"  class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 按天回滚 daily -->
+            <fileNamePattern>${LOG_PATH}/export-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 日志最大的历史 60天 -->
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PARTTERN}</pattern>
+        </encoder>
+    </appender>
+    
+    <!-- 导入日志 appender  -->
+    <appender name="IMPORT"  class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 按天回滚 daily -->
+            <fileNamePattern>${LOG_PATH}/import-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 日志最大的历史 60天 -->
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PARTTERN}</pattern>
+        </encoder>
+    </appender>
+    
+    <!-- 手动执行 appender  -->
+    <appender name="MANUAL"  class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 按天回滚 daily -->
+            <fileNamePattern>${LOG_PATH}/manual-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 日志最大的历史 60天 -->
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PARTTERN}</pattern>
+        </encoder>
+    </appender>
+    
+    
+    <!-- 模板，不使用 -->
+<!--     <appender name="template" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    	设置过滤级别，所有非info的日志被过滤掉
+    	<filter class="ch.qos.logback.classic.filter.LevelFilter">
+    		<level>INFO</level>
+    		<onMatch>ACCEPT</onMatch>
+    		<onMismatch>DENY</onMismatch>
+    	</filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            按天回滚 daily
+            <fileNamePattern>${LOG_PATH}/access-%d{yyyy-MM-dd}.log</fileNamePattern>
+            日志最大的历史 60天
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender> -->
+
+
+    <!--错误日志-->
+    <logger name="log-error" level="info" >
+        <appender-ref ref="ERROR"/>
+    </logger>
+    <!--主要日志-->
+    <logger name="log-main" level="info">
+        <appender-ref ref="MAIN"/>
+    </logger>
+    <!--数据库日志-->
+    <logger name="log-jdbc" level="info">
+        <appender-ref ref="JDBC"/>
+    </logger>
+    <!--监控日志-->
+    <logger name="log-monitor" level="info">
+        <appender-ref ref="MONITOR"/>
+    </logger>
+    <!--导出日志-->
+    <logger name="log-export" level="info">
+        <appender-ref ref="EXPORT"/>
+    </logger>
+    <!--导入日志-->
+    <logger name="log-import" level="info">
+        <appender-ref ref="IMPORT"/>
+    </logger>
+    <!--手动日志-->
+    <logger name="log-manual" level="info">
+        <appender-ref ref="MANUAL"/>
+    </logger>
+
+    <root level="info">
+    	<!-- <appender-ref ref="STDOUT" /> -->
+    	<appender-ref ref="MAIL" />
+    </root>
+
+</configuration>
+
+
+
